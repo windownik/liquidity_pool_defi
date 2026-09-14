@@ -22,7 +22,6 @@ pub struct InitializeMarket<'info> {
     pub fee_receiver: UncheckedAccount<'info>,
 
     pub system_program: Program<'info, System>,
-
 }
 
 
@@ -40,7 +39,6 @@ pub fn process_initialize_market(
     // Тот, кто вызвал эту функцию первыми, записывается как единственный admin
     market.admin = ctx.accounts.admin.key();
     market.fee_receiver = ctx.accounts.fee_receiver.key();
-    market.reserves_count = 0;
     market.protocol_fee_bps = protocol_fee_bps;
     market.is_paused = false;
     market.version = 1;

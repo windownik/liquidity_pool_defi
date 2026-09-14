@@ -1,20 +1,22 @@
 pub mod constants;
 
 pub mod state;
-pub mod bank_with_pda;
+pub mod instructions;
 pub mod structures;
 
 use anchor_lang::prelude::*;
 
-pub use bank_with_pda::*;
+pub use instructions::*;
 pub use structures::currency::*;
 
 declare_id!("3gW4EMz31zs6HMxyoCWUb5mxXeLj4V3Ur2H41VvPWPMM");
 
 #[program]
 pub mod my_liquidity_bank {
-    use crate::bank_with_pda::initialize_market::{process_initialize_market, InitializeMarket};
+    use crate::instructions::initialize_market::{process_initialize_market, InitializeMarket};
     use crate::update_is_paused_status::{update_is_paused, UpdateIsPaused};
+    use crate::deposit::{process_deposit, Deposit};
+    use crate::create_bank::{process_create_bank, CreateBank};
     use crate::structures::currency::Currency;
     use super::*;
 
@@ -22,8 +24,12 @@ pub mod my_liquidity_bank {
         process_initialize_market(ctx, protocol_fee_bps)
     }
 
-    pub fn deposit(ctx: Context<InitializeMarket>, amount: u64, currency: Currency) -> Result<()> {
-        todo!();
+    pub fn deposit(ctx: Context<Deposit>, amount: u64,) -> Result<()> {
+        todo!()
+    }
+
+    pub fn create_bank_for_token(ctx: Context<CreateBank>,) -> Result<()> {
+        process_create_bank(ctx)
     }
 
     // pub fn withdraw(ctx: Context<InitializeMarket>, amount: u64, currency: Currency) -> Result<()> {
