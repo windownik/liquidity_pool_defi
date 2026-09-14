@@ -7,7 +7,6 @@ pub mod structures;
 use anchor_lang::prelude::*;
 
 pub use instructions::*;
-pub use structures::currency::*;
 
 declare_id!("3gW4EMz31zs6HMxyoCWUb5mxXeLj4V3Ur2H41VvPWPMM");
 
@@ -17,7 +16,6 @@ pub mod my_liquidity_bank {
     use crate::update_is_paused_status::{update_is_paused, UpdateIsPaused};
     use crate::deposit::{process_deposit, Deposit};
     use crate::create_bank::{process_create_bank, CreateBank};
-    use crate::structures::currency::Currency;
     use super::*;
 
     pub fn initialize_market(ctx: Context<InitializeMarket>, protocol_fee_bps: u16,) -> Result<()> {
@@ -29,6 +27,10 @@ pub mod my_liquidity_bank {
     }
 
     pub fn create_bank_for_token(ctx: Context<CreateBank>,) -> Result<()> {
+        process_create_bank(ctx)
+    }
+
+    pub fn create_bank_for_native_sol(ctx: Context<CreateBank>,) -> Result<()> {
         process_create_bank(ctx)
     }
 
