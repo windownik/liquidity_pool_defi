@@ -7,7 +7,7 @@ resolution = true
 skip-lint = false
 
 [programs.devnet]
-my_counter = "3gW4EMz31zs6HMxyoCWUb5mxXeLj4V3Ur2H41VvPWPMM"
+my_counter = "13smfEHMmWM7Yaorw3kwXjeDq5LLppimtwVje6Jonz6j"
 
 [provider]
 cluster = "devnet"

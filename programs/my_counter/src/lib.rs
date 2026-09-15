@@ -8,11 +8,10 @@ use anchor_lang::prelude::*;
 
 pub use instructions::*;
 
-declare_id!("3gW4EMz31zs6HMxyoCWUb5mxXeLj4V3Ur2H41VvPWPMM");
+declare_id!("13smfEHMmWM7Yaorw3kwXjeDq5LLppimtwVje6Jonz6j");
 
 #[program]
 pub mod my_liquidity_bank {
-    use anchor_spl::token::accessor::amount;
     use crate::instructions::initialize_market::{process_initialize_market, InitializeMarket};
     use crate::update_is_paused_status::{update_is_paused, UpdateIsPaused};
     use crate::deposit_sol::{process_deposit_sol, DepositSol};

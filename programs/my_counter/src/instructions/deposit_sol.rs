@@ -32,6 +32,7 @@ pub struct DepositSol<'info> {
 
 pub fn process_deposit_sol(ctx: Context<DepositSol>, amount: u64) -> Result<()> {
     require!(amount > 0, BankErrorCodes::InvalidAmount);
+
     let market = &ctx.accounts.market;
     require!(!market.is_paused, BankErrorCodes::InvalidAmount);
 
@@ -45,19 +46,25 @@ pub fn process_deposit_sol(ctx: Context<DepositSol>, amount: u64) -> Result<()> 
         system_program,
         &mut ctx.accounts.user_deposit,
     )?;
-    let mut user_deposit = Account::<UserDeposit>::try_from(
-        &ctx.accounts.user_deposit.to_account_info()
-    )?;
-    // Transfer sol
-    let ix = system_instruction::transfer(&ctx.accounts.user.key(), &bank.key(), amount);
+
+
+    // Transfer SOL
+    let ix = system_instruction::transfer(
+        &ctx.accounts.user.key(),
+        &bank.key(),
+        amount,
+    );
     invoke(
         &ix,
         &[
-            ctx.accounts.user_deposit.to_account_info(),
+            ctx.accounts.user.to_account_info(),
             bank.to_account_info(),
             system_program.to_account_info(),
         ],
     )?;
+    {
+    let mut data = ctx.accounts.user_deposit.try_borrow_mut_data()?;
+    let mut user_deposit = UserDeposit::try_deserialize(&mut &data[..])?;
 
     if user_deposit.user == Pubkey::default() {
         user_deposit.user = ctx.accounts.user.key();
@@ -70,7 +77,8 @@ pub fn process_deposit_sol(ctx: Context<DepositSol>, amount: u64) -> Result<()> 
             .checked_add(amount)
             .ok_or(BankErrorCodes::MathOverflow)?;
     }
-
+        user_deposit.try_serialize(&mut *data)?;
+    }
     bank.total_deposits = bank
         .total_deposits
         .checked_add(amount)
