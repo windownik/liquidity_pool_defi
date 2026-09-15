@@ -25,6 +25,8 @@ pub struct DepositSol<'info> {
     #[account(mut)]
     pub user: Signer<'info>,
 
+    /// CHECK: This is a PDA that is created and validated manually in `create_user_deposit_if_needed`.
+    /// We check the seeds and initialize it ourselves.
     #[account(mut)]
     pub user_deposit: UncheckedAccount<'info>,
     pub system_program: Program<'info, System>,

@@ -1,9 +1,9 @@
 use anchor_lang::prelude::*;
-use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 use crate::state::bank::Bank;
 use crate::structures::error::BankErrorCodes;
 use crate::structures::market::Market;
 use anchor_spl::token::spl_token::native_mint;
+
 
 #[derive(Accounts)]
 pub struct CreateBankNativeSolana<'info> {

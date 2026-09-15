@@ -8,7 +8,7 @@ use anchor_lang::prelude::*;
 
 pub use instructions::*;
 
-declare_id!("13smfEHMmWM7Yaorw3kwXjeDq5LLppimtwVje6Jonz6j");
+declare_id!("CNYdKS8ecig3J99R4xC4TfbReMZCGJhjXifk97m56vLB");
 
 #[program]
 pub mod my_liquidity_bank {
