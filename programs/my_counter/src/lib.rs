@@ -12,9 +12,10 @@ declare_id!("3gW4EMz31zs6HMxyoCWUb5mxXeLj4V3Ur2H41VvPWPMM");
 
 #[program]
 pub mod my_liquidity_bank {
+    use anchor_spl::token::accessor::amount;
     use crate::instructions::initialize_market::{process_initialize_market, InitializeMarket};
     use crate::update_is_paused_status::{update_is_paused, UpdateIsPaused};
-    use crate::deposit::{process_deposit, Deposit};
+    use crate::deposit_sol::{process_deposit_sol, DepositSol};
     use crate::create_bank::{process_create_bank, CreateBank};
     use super::*;
 
@@ -22,8 +23,8 @@ pub mod my_liquidity_bank {
         process_initialize_market(ctx, protocol_fee_bps)
     }
 
-    pub fn deposit(ctx: Context<Deposit>, amount: u64,) -> Result<()> {
-        todo!()
+    pub fn deposit_native_sol(ctx: Context<DepositSol>, amount: u64,) -> Result<()> {
+        process_deposit_sol(ctx, amount)
     }
 
     pub fn create_bank_for_token(ctx: Context<CreateBank>,) -> Result<()> {

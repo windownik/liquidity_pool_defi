@@ -1,4 +1,4 @@
-use anchor_lang::prelude::*;
+use anchor_lang::prelude::error_code;
 
 #[error_code]
 pub enum BankErrorCodes {
@@ -18,5 +18,8 @@ pub enum BankErrorCodes {
     InsufficientBalance,
 
     #[msg("Wrong token amount")]
-    InvalidAmount
+    InvalidAmount,
+
+    #[msg("Overflow bank amount")]
+    MathOverflow
 }
