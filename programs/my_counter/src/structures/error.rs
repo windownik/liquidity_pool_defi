@@ -21,5 +21,8 @@ pub enum BankErrorCodes {
     InvalidAmount,
 
     #[msg("Overflow bank amount")]
-    MathOverflow
+    MathOverflow,
+
+    #[msg("Wrong bank vault check date")]
+    SPLBankCheckError
 }

@@ -1,24 +1,28 @@
 use anchor_lang::prelude::*;
-use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
+use anchor_spl::token::{Mint, Token, TokenAccount};
 use crate::state::bank::Bank;
 use crate::structures::error::BankErrorCodes;
 use crate::structures::market::Market;
 
 #[derive(Accounts)]
 pub struct CreateBank<'info> {
+    #[account(mut)]
+    pub admin: Signer<'info>,
+
     #[account(
         seeds = [b"lending_market"],
+        constraint = market.admin == admin.key() @ BankErrorCodes::Unauthorized,
         bump = market.bump,
     )]
     pub market: Account<'info, Market>,
 
-    pub mint: InterfaceAccount<'info, Mint>,
+    pub mint: Account<'info, Mint>,
 
     #[account(
         init,
         payer = admin,
         space = 8 + Bank::INIT_SPACE,
-        seeds = [b"bank", market.key().as_ref(), mint.key().as_ref()],
+        seeds = [b"bank",  mint.key().as_ref(), market.key().as_ref(),],
         bump,
     )]
     pub bank: Account<'info, Bank>,
@@ -26,36 +30,27 @@ pub struct CreateBank<'info> {
     #[account(
         init,
         payer = admin,
-        seeds = [b"vault", bank.key().as_ref()],
+        seeds = [b"bank_vault", bank.key().as_ref()],
         bump,
         token::mint = mint,
         token::authority = bank,
-        token::token_program = token_program,
     )]
-    pub vault: InterfaceAccount<'info, TokenAccount>,
-
-    #[account(mut)]
-    pub admin: Signer<'info>,
+    pub bank_vault: Account<'info, TokenAccount>,
 
     pub system_program: Program<'info, System>,
-    pub token_program: Interface<'info, TokenInterface>,
+    pub token_program: Program<'info, Token>,
 }
 
 pub fn process_create_bank(ctx: Context<CreateBank>) -> Result<()> {
     let bank = &mut ctx.accounts.bank;
-    let market = & ctx.accounts.market;
-    let admin = & ctx.accounts.admin;
-    if market.admin != admin.key() {
-        return Err(Error::from(BankErrorCodes::Unauthorized));
-    }
     bank.market = ctx.accounts.market.key();
     bank.mint = ctx.accounts.mint.key();
-    bank.vault = ctx.accounts.vault.key();
+    bank.vault = ctx.accounts.bank_vault.key();
     bank.total_deposits = 0;
     bank.total_borrows = 0;
     bank.deposit_limit = 0;
     bank.bump = ctx.bumps.bank;
-    bank.vault_bump = ctx.bumps.vault;
+    bank.vault_bump = ctx.bumps.bank_vault;
 
     msg!(
         "Bank created for mint {} with vault {}",
