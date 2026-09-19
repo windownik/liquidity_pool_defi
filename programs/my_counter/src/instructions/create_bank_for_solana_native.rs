@@ -17,7 +17,7 @@ pub struct CreateBankNativeSolana<'info> {
         init,
         payer = admin,
         space = 8 + Bank::INIT_SPACE,
-        seeds = [b"bank", market.key().as_ref(), native_mint::ID.as_ref()],
+        seeds = [b"bank_solana_native", market.key().as_ref()],
         bump,
     )]
     pub bank: Account<'info, Bank>,

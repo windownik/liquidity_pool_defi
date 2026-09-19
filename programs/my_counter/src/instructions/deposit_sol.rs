@@ -36,7 +36,7 @@ pub fn process_deposit_sol(ctx: Context<DepositSol>, amount: u64) -> Result<()> 
     require!(amount > 0, BankErrorCodes::InvalidAmount);
 
     let market = &ctx.accounts.market;
-    require!(!market.is_paused, BankErrorCodes::InvalidAmount);
+    require!(!market.is_paused, BankErrorCodes::IsStop);
 
     let bank = &mut ctx.accounts.bank;
     let system_program = &ctx.accounts.system_program;
