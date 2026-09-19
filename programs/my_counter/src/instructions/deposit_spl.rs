@@ -19,7 +19,7 @@ pub struct DepositSpl<'info> {
 
     #[account(
         mut,
-        constraint = user_token_account.owner == user.key() @ BankErrorCodes::SPLBankCheckError,
+        constraint = user_token_account.owner == user.key() @ BankErrorCodes::InvalidTokenAccount,
     )]
     pub user_token_account: Account<'info, TokenAccount>,
 
@@ -37,7 +37,7 @@ pub struct DepositSpl<'info> {
         mut,
         seeds = [b"bank_vault", bank.key().as_ref()],
         bump = bank.vault_bump,
-        constraint = bank_vault.owner == bank.key() @ BankErrorCodes::SPLBankCheckError,
+        constraint = bank_vault.owner == bank.key() @ BankErrorCodes::InvalidTokenAccount,
     )]
     pub bank_vault: Account<'info, TokenAccount>,
 
@@ -59,8 +59,20 @@ pub fn process_deposit_spl_tokens(
 ) -> Result<()> {
     require!(amount > 0, BankErrorCodes::InvalidAmount);
     let market = & ctx.accounts.market;
-    require!(!market.is_paused, BankErrorCodes::IsStop);
+    require!(!market.is_paused, BankErrorCodes::MarketPaused);
     let bank = &mut ctx.accounts.bank;
+
+    if bank.deposit_limit > 0 {
+        let new_total = bank
+            .total_deposits
+            .checked_add(amount)
+            .ok_or(BankErrorCodes::MathOverflow)?;
+        require!(
+            new_total <= bank.deposit_limit,
+            BankErrorCodes::DepositLimitExceeded
+        );
+    }
+
     let bank_vault = &mut ctx.accounts.bank_vault;
     let user_deposit = &mut ctx.accounts.user_deposit;
 
