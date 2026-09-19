@@ -15,7 +15,7 @@ pub mod my_liquidity_bank {
     use crate::instructions::initialize_market::{process_initialize_market, InitializeMarket};
     use crate::update_is_paused_status::{update_is_paused, UpdateIsPaused};
     use crate::deposit_sol::{process_deposit_sol, DepositSol};
-    use crate::create_bank::{process_create_bank, CreateBank};
+    use crate::create_bank_for_spl::{process_create_bank, CreateBank};
     use crate::create_users_spl_deposit::{process_create_user_spl_deposit, CreateUserSplDeposit};
     use super::*;
 
