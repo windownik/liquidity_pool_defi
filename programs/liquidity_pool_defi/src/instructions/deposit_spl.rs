@@ -73,7 +73,6 @@ pub fn process_deposit_spl_tokens(
         );
     }
 
-    let bank_vault = &mut ctx.accounts.bank_vault;
     let user_deposit = &mut ctx.accounts.user_deposit;
 
     // Create transaction

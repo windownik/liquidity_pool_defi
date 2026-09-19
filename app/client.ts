@@ -1,6 +1,6 @@
 import * as anchor from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
-import { MyCounter } from "../target/types/my_counter";
+import { MyCounter } from "../target/types/liquidity_pool_defi";
 // @ts-ignore
 import fs from "fs";
 // @ts-ignore
