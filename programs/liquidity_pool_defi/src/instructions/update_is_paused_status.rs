@@ -24,9 +24,7 @@ pub fn update_is_paused(
 ) -> Result<()> {
     let market = &mut ctx.accounts.market;
 
-    // Обновляем статус
     market.is_paused = is_paused;
-
     msg!("Global market pause status updated to: {}", is_paused);
 
     Ok(())

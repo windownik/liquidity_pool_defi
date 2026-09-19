@@ -18,7 +18,7 @@ pub struct InitializeMarket<'info> {
     #[account(mut)]
     pub admin: Signer<'info>,
 
-    /// CHECK: Кошелек для сбора комиссий
+    /// CHECK: Protocol fee collection wallet (admin-provided)
     pub fee_receiver: UncheckedAccount<'info>,
 
     pub system_program: Program<'info, System>,
@@ -36,7 +36,6 @@ pub fn process_initialize_market(
 
     let market = &mut ctx.accounts.market;
 
-    // Тот, кто вызвал эту функцию первыми, записывается как единственный admin
     market.admin = ctx.accounts.admin.key();
     market.fee_receiver = ctx.accounts.fee_receiver.key();
     market.protocol_fee_bps = protocol_fee_bps;
